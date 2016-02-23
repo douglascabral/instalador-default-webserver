@@ -112,7 +112,7 @@ echo "Reiniciando apache2"
 sudo service apache2 restart
 
 echo "Atualizando arquivo hosts"
-sudo echo "127.0.1.1   test.local www.test.local" >> /etc/hosts
+echo "127.0.1.1   test.local www.test.local" | sudo tee --append /etc/hosts
 
 echo -n "Pressione qualquer tecla para sair..."
 read
