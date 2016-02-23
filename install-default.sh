@@ -37,7 +37,7 @@ php5-ming
 php5-ps
 php5-pspell
 php5-recode
-php5-snmp
+#php5-snmp
 php5-sqlite
 php5-tidy
 php5-xmlrpc
@@ -81,7 +81,7 @@ sudo chmod -R 755 /var/www
 touch /var/www/test.local/public_html/index.php
 
 #phpinfo
-echo '<?php phpinfo();' >> /var/www/test.local/public_html/index.php
+echo '<?php phpinfo();' > /var/www/test.local/public_html/index.php
 
 #cria o virtualhost
 sudo cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/test.local.conf
