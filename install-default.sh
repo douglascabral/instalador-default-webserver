@@ -69,6 +69,47 @@ sudo a2enmod rewrite
 echo "Reiniciando apache2"
 sudo service apache2 restart
 
+#cria estrutura de diretorio e concede permissão para o usuário logado
+sudo mkdir -p /var/www/test.local/public_html
+sudo chown -R $USER:$USER /var/www/test.local/public_html
+
+#permissão para o diretório web
+sudo chmod -R 755 /var/www
+
+#cria um arquivo index
+touch /var/www/test.local/public_html/index.php
+
+#phpinfo
+echo '<?php phpinfo();' >> /var/www/test.local/public_html/index.php
+
+#cria o virtualhost
+sudo cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/test.local.conf
+
+echo "
+<Directory /var/www/test.local/>
+	Options Indexes FollowSymLinks MultiViews
+	AllowOverride All
+	Order allow,deny
+	allow from all
+</Directory>
+<VirtualHost *:80>
+	ServerAdmin admin@example.com
+	ServerName test.local
+	ServerAlias www.test.local
+	DocumentRoot /var/www/test.local/public_html
+	ErrorLog ${APACHE_LOG_DIR}/error.log
+	CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+" > /etc/apache2/sites-available/test.local.conf
+
+#Ativa os novos arquivos de virtual host
+echo "Ativando virtual host de test.local"
+sudo a2ensite test.local.conf
+
+#restart o apache novamente
+echo "Reiniciando apache2"
+sudo service apache2 restart
+
 echo -n "Pressione qualquer tecla para sair..."
 read
 exit
