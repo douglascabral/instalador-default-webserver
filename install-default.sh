@@ -17,6 +17,7 @@ sudo apt-get update
 
 # Array de pacotes para instalar
 programas=(
+git
 apache2
 mysql-server
 mysql-client
@@ -86,7 +87,7 @@ echo '<?php phpinfo();' >> /var/www/test.local/public_html/index.php
 sudo cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/test.local.conf
 
 echo "
-<Directory /var/www/test.local/>
+<Directory /var/www/test.local/public_html/>
 	Options Indexes FollowSymLinks MultiViews
 	AllowOverride All
 	Order allow,deny
@@ -109,6 +110,9 @@ sudo a2ensite test.local.conf
 #restart o apache novamente
 echo "Reiniciando apache2"
 sudo service apache2 restart
+
+echo "Atualizando arquivo hosts"
+echo "127.0.1.1   test.local www.test.local" >> /etc/hosts
 
 echo -n "Pressione qualquer tecla para sair..."
 read
