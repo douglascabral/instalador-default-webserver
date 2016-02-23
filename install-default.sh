@@ -101,7 +101,7 @@ echo "
 	ErrorLog ${APACHE_LOG_DIR}/error.log
 	CustomLog ${APACHE_LOG_DIR}/access.log combined
 </VirtualHost>
-" > /etc/apache2/sites-available/test.local.conf
+" | sudo tee /etc/apache2/sites-available/test.local.conf
 
 #Ativa os novos arquivos de virtual host
 echo "Ativando virtual host de test.local"
