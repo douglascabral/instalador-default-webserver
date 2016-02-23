@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Procedimento para instalaÁ„o dos principais programas para um servidor web
+# Procedimento para instala√ß√£o dos principais programas para um servidor web
 # Data: 23/02/2016
 # Por: Douglas Cabral
 #
@@ -45,13 +45,13 @@ php5-xsl
 php5-json
 )
 
-#instala cada uma das aplicaÁıes
+#instala cada uma das aplica√ß√µes
 for i in "${programas[@]}"
 do
     pacote=$(dpkg --get-selections | grep "$i")
     if [ -n "$pacote" ];
     then
-        echo "Pacote $i j· instalado"
+        echo "Pacote $i j√° instalado"
     else
         echo "Instalando $i"
         sudo apt-get -y install "$i"
@@ -70,11 +70,11 @@ sudo a2enmod rewrite
 echo "Reiniciando apache2"
 sudo service apache2 restart
 
-#cria estrutura de diretorio e concede permiss„o para o usu·rio logado
+#cria estrutura de diretorio e concede permiss√£o para o usu√°rio logado
 sudo mkdir -p /var/www/test.local/public_html
-sudo chown -R $USER:$USER /var/www/test.local/public_html
+sudo chown -R $USER:$USER /var/www/test.local
 
-#permiss„o para o diretÛrio web
+#permiss√£o para o diret√≥rio web
 sudo chmod -R 755 /var/www
 
 #cria um arquivo index
