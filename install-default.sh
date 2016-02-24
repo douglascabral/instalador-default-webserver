@@ -145,6 +145,9 @@ sudo make install
 
 sudo ruby-install ruby
 
+#Instala o SASS
+sudo gem install sass
+
 #Apaga o arquivo atual
 rm "$0"
 
