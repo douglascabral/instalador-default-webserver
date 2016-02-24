@@ -128,6 +128,9 @@ php -r "unlink('composer-setup.php');"
 
 sudo mv composer /usr/local/bin/composer
 
+echo "Instalando o grunt"
+sudo npm install grunt-cli -g
+
 #Apaga o arquivo atual
 rm "$0"
 
