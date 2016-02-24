@@ -138,18 +138,24 @@ sudo npm install grunt-cli -g
 sudo ln -s /usr/bin/nodejs /usr/bin/node
 
 #Instala o ruby
-wget -O ruby-install-0.6.0.tar.gz https://github.com/postmodern/ruby-install/archive/v0.6.0.tar.gz
-tar -xzvf ruby-install-0.6.0.tar.gz
-cd ruby-install-0.6.0/
-sudo make install
+#wget -O ruby-install-0.6.0.tar.gz https://github.com/postmodern/ruby-install/archive/v0.6.0.tar.gz
+#tar -xzvf ruby-install-0.6.0.tar.gz
+#cd ruby-install-0.6.0/
+#sudo make install
+#sudo ruby-install ruby
+#see https://www.digitalocean.com/community/tutorials/how-to-use-rvm-to-manage-ruby-installations-and-environments-on-a-vps
+#see https://www.digitalocean.com/community/tutorials/how-to-install-ruby-on-rails-on-ubuntu-14-04-using-rvm
+sudo gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
+curl -sSL https://get.rvm.io | bash -s stable
 
-sudo ruby-install ruby
+source ~/.rvm/scripts/rvm
+rvm install ruby --latest
 
 #Instala o SASS
-sudo gem install sass
+gem install sass
 
 #Apaga o arquivo atual
-rm "$0"
+sudo rm "$0"
 
 #Espera interação do usuário
 echo -n "Pressione qualquer tecla para sair..."
