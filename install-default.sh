@@ -75,7 +75,7 @@ sudo service apache2 restart
 
 #cria estrutura de diretorio e concede permissão para o usuário logado
 sudo mkdir -p /var/www/test.local/public_html
-sudo chown -R $USER:$USER /var/www/test.local/public_html
+sudo chown -R $USER:$USER /var/www/test.local
 
 #permissão para o diretório web
 sudo chmod -R 755 /var/www
