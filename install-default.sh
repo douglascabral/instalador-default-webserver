@@ -12,13 +12,15 @@ sudo -v
 #see https://gist.github.com/cowboy/3118588
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
+#Repositório nodejs
+curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -
+
 # Atualiza a lista de pacotes
 sudo apt-get update
 
 # Array de pacotes para instalar
 programas=(
 git
-curl
 apache2
 mysql-server
 mysql-client
@@ -128,8 +130,20 @@ php -r "unlink('composer-setup.php');"
 
 sudo mv composer /usr/local/bin/composer
 
+#Instala o grunt
 echo "Instalando o grunt"
 sudo npm install grunt-cli -g
+
+#Cria o alias pra o node
+sudo ln -s /usr/bin/nodejs /usr/bin/node
+
+#Instala o ruby
+wget -O ruby-install-0.6.0.tar.gz https://github.com/postmodern/ruby-install/archive/v0.6.0.tar.gz
+tar -xzvf ruby-install-0.6.0.tar.gz
+cd ruby-install-0.6.0/
+sudo make install
+
+sudo ruby-install ruby
 
 #Apaga o arquivo atual
 rm "$0"
