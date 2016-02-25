@@ -12,6 +12,18 @@ sudo -v
 #see https://gist.github.com/cowboy/3118588
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
+#
+# Função para dar feedback ao usuário sobre o que está acontecendo no script
+#
+feedback()
+{
+	echo
+	echo "----------------------------------------------------------------"
+	echo $1
+	echo "----------------------------------------------------------------"
+	echo 
+}
+
 #Repositório nodejs mais recente
 curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -
 
@@ -64,6 +76,7 @@ npm
 )
 
 #instala cada uma das aplicações
+feedback "Instalando lista de programas"
 for i in "${programas[@]}"
 do
     pacote=$(dpkg --get-selections | grep "$i")
@@ -77,18 +90,19 @@ do
 done
 
 #restart o apache
-echo "Reiniciando apache2"
+feedback "Reiniciando apache2"
 sudo service apache2 restart
 
 #ativa o mod_rewrite
-echo "Ativando o mod_rewrite no apache"
+feedback "Ativando o mod_rewrite no apache"
 sudo a2enmod rewrite
 
 #restart o apache novamente
-echo "Reiniciando apache2"
+feedback "Reiniciando apache2"
 sudo service apache2 restart
 
 #cria estrutura de diretorio e concede permissão para o usuário logado
+feedback "Criando estrutura de diretório para test.local"
 sudo mkdir -p /var/www/test.local/public_html
 sudo chown -R $USER:$USER /var/www/test.local
 
@@ -102,6 +116,7 @@ touch /var/www/test.local/public_html/index.php
 echo '<?php phpinfo();' > /var/www/test.local/public_html/index.php
 
 #cria o virtualhost
+feedback "Criando virtualhost para test.local"
 sudo cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/test.local.conf
 
 echo "
@@ -122,36 +137,43 @@ echo "
 " | sudo tee /etc/apache2/sites-available/test.local.conf
 
 #Ativa os novos arquivos de virtual host
-echo "Ativando virtual host de test.local"
+feedback "Ativando virtual host de test.local"
 sudo a2ensite test.local.conf
 
 #restart o apache novamente
-echo "Reiniciando apache2"
+feedback "Reiniciando apache2"
 sudo service apache2 restart
 
 #Atualiza o arquivo hosts
-echo "Atualizando arquivo hosts"
+feedback "Atualizando arquivo hosts"
 echo "127.0.1.1   test.local www.test.local" | sudo tee --append /etc/hosts
 
 #Instala o composer
-echo "Instalando o composer"
-php -r "readfile('https://getcomposer.org/installer');" > composer-setup.php
-php -r "if (hash('SHA384', file_get_contents('composer-setup.php')) === 'fd26ce67e3b237fffd5e5544b45b0d92c41a4afe3e3f778e942e43ce6be197b9cdc7c251dcde6e2a52297ea269370680') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); }"
-php composer-setup.php --filename=composer
-php -r "unlink('composer-setup.php');"
+feedback "Instalando o composer"
+if [ -e /usr/local/bin/composer ]; 
+then
+	echo "Composer já esta instalado"
+else
+	php -r "readfile('https://getcomposer.org/installer');" > composer-setup.php
+	php -r "if (hash('SHA384', file_get_contents('composer-setup.php')) === 'fd26ce67e3b237fffd5e5544b45b0d92c41a4afe3e3f778e942e43ce6be197b9cdc7c251dcde6e2a52297ea269370680') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); }"
+	php composer-setup.php --filename=composer
+	php -r "unlink('composer-setup.php');"
 
-sudo mv composer /usr/local/bin/composer
+	sudo mv composer /usr/local/bin/composer
+fi
 
 #Instala o grunt
-echo "Instalando o grunt"
+feedback "Instalando o grunt"
 sudo npm install grunt-cli -g
 
 #Cria o alias pra o node
+feedback "Criando alias para nodejs > node"
 sudo ln -s /usr/bin/nodejs /usr/bin/node
 
 #Instala o ruby
 #see https://www.digitalocean.com/community/tutorials/how-to-install-ruby-on-rails-with-rbenv-on-ubuntu-14-04
 #see http://www.leonardteo.com/2012/11/install-ruby-on-rails-on-ubuntu-server/
+feedback "Instalando Ruby"
 wget -O ruby-stable.tar.gz https://cache.ruby-lang.org/pub/ruby/stable-snapshot.tar.gz
 tar -zxf ruby-stable.tar.gz
 mv ./stable-snapshot ./ruby-stable
@@ -164,10 +186,14 @@ cd ..
 rm -R ruby-stable ruby-stable.tar.gz
 
 #Instala o bundle
+feedback "Instalando o bundle"
 sudo gem install bundler
 
 #Instala o SASS
+feedback "Instalando o sass"
 sudo gem install sass
+
+feedback "Todas as instalações foram realizadas!"
 
 #Espera interação do usuário
 echo -n "Pressione qualquer tecla para sair..."
