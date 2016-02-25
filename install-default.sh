@@ -19,7 +19,7 @@ feedback()
 {
 	echo
 	echo "----------------------------------------------------------------"
-	echo $1
+	echo "$1"
 	echo "----------------------------------------------------------------"
 	echo 
 }
@@ -31,7 +31,7 @@ curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -
 sudo apt-get update
 
 # Array de pacotes para instalar (Na ordem de importancia)
-programas=(
+PROGRAMAS=(
 build-essential
 zlib1g-dev
 libssl-dev
@@ -77,7 +77,7 @@ npm
 
 #instala cada uma das aplicações
 feedback "Instalando lista de programas"
-for i in "${programas[@]}"
+for i in "${PROGRAMAS[@]}"
 do
     pacote=$(dpkg --get-selections | grep "$i")
     if [ -n "$pacote" ];
@@ -101,52 +101,57 @@ sudo a2enmod rewrite
 feedback "Reiniciando apache2"
 sudo service apache2 restart
 
-#cria estrutura de diretorio e concede permissão para o usuário logado
-feedback "Criando estrutura de diretório para test.local"
-sudo mkdir -p /var/www/test.local/public_html
-sudo chown -R $USER:$USER /var/www/test.local
+if ! [ -d /var/www/test.local ];
+then
+	#cria estrutura de diretorio e concede permissão para o usuário logado
+	feedback "Criando estrutura de diretório para test.local"
+	sudo mkdir -p /var/www/test.local/public_html
+	sudo chown -R $USER:$USER /var/www/test.local
 
-#permissão para o diretório web
-sudo chmod -R 755 /var/www
+	#permissão para o diretório web
+	sudo chmod -R 755 /var/www
 
-#cria um arquivo index
-touch /var/www/test.local/public_html/index.php
+	#cria um arquivo index
+	touch /var/www/test.local/public_html/index.php
 
-#phpinfo
-echo '<?php phpinfo();' > /var/www/test.local/public_html/index.php
+	#phpinfo
+	echo '<?php phpinfo();' > /var/www/test.local/public_html/index.php
 
-#cria o virtualhost
-feedback "Criando virtualhost para test.local"
-sudo cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/test.local.conf
+	#cria o virtualhost
+	feedback "Criando virtualhost para test.local"
+	sudo cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/test.local.conf
 
-echo "
-<Directory /var/www/test.local/public_html/>
-	Options Indexes FollowSymLinks MultiViews
-	AllowOverride All
-	Order allow,deny
-	allow from all
-</Directory>
-<VirtualHost *:80>
-	ServerAdmin admin@example.com
-	ServerName test.local
-	ServerAlias www.test.local
-	DocumentRoot /var/www/test.local/public_html
-	ErrorLog ${APACHE_LOG_DIR}/error.log
-	CustomLog ${APACHE_LOG_DIR}/access.log combined
-</VirtualHost>
-" | sudo tee /etc/apache2/sites-available/test.local.conf
+	echo "
+	<Directory /var/www/test.local/public_html/>
+		Options Indexes FollowSymLinks MultiViews
+		AllowOverride All
+		Order allow,deny
+		allow from all
+	</Directory>
+	<VirtualHost *:80>
+		ServerAdmin admin@example.com
+		ServerName test.local
+		ServerAlias www.test.local
+		DocumentRoot /var/www/test.local/public_html
+		ErrorLog ${APACHE_LOG_DIR}/error.log
+		CustomLog ${APACHE_LOG_DIR}/access.log combined
+	</VirtualHost>
+	" | sudo tee /etc/apache2/sites-available/test.local.conf
 
-#Ativa os novos arquivos de virtual host
-feedback "Ativando virtual host de test.local"
-sudo a2ensite test.local.conf
+	#Ativa os novos arquivos de virtual host
+	feedback "Ativando virtual host de test.local"
+	sudo a2ensite test.local.conf
 
-#restart o apache novamente
-feedback "Reiniciando apache2"
-sudo service apache2 restart
+	#restart o apache novamente
+	feedback "Reiniciando apache2"
+	sudo service apache2 restart
 
-#Atualiza o arquivo hosts
-feedback "Atualizando arquivo hosts"
-echo "127.0.1.1   test.local www.test.local" | sudo tee --append /etc/hosts
+	#Atualiza o arquivo hosts
+	feedback "Atualizando arquivo hosts"
+	echo "127.0.1.1   test.local www.test.local" | sudo tee --append /etc/hosts
+else
+	echo "Estrutura de test.local já existe"
+fi
 
 #Instala o composer
 feedback "Instalando o composer"
@@ -162,36 +167,43 @@ else
 	sudo mv composer /usr/local/bin/composer
 fi
 
-#Instala o grunt
-feedback "Instalando o grunt"
-sudo npm install grunt-cli -g
-
 #Cria o alias pra o node
 feedback "Criando alias para nodejs > node"
 sudo ln -s /usr/bin/nodejs /usr/bin/node
 
+#Instala o grunt
+feedback "Instalando o grunt-cli globalmente"
+sudo npm install grunt-cli -g
+
 #Instala o ruby
 #see https://www.digitalocean.com/community/tutorials/how-to-install-ruby-on-rails-with-rbenv-on-ubuntu-14-04
 #see http://www.leonardteo.com/2012/11/install-ruby-on-rails-on-ubuntu-server/
-feedback "Instalando Ruby"
-wget -O ruby-stable.tar.gz https://cache.ruby-lang.org/pub/ruby/stable-snapshot.tar.gz
-tar -zxf ruby-stable.tar.gz
-mv ./stable-snapshot ./ruby-stable
-cd ruby-stable
-./configure
-make
-sudo make install
-echo "gem: --no-ri --no-rdoc" >> ~/.gemrc
-cd ..
-rm -R ruby-stable ruby-stable.tar.gz
+feedback "Verificando se Ruby está instalado"
+ruby -v
+if [ $? -eq 0 ];
+then
+	echo "Ruby já está instalado"
+else
+	feedback "Instalando Ruby"
+	wget -O ruby-stable.tar.gz https://cache.ruby-lang.org/pub/ruby/stable-snapshot.tar.gz
+	tar -zxf ruby-stable.tar.gz
+	mv ./stable-snapshot ./ruby-stable
+	cd ruby-stable
+	./configure
+	make
+	sudo make install
+	echo "gem: --no-ri --no-rdoc" >> ~/.gemrc
+	cd ..
+	rm -R ruby-stable ruby-stable.tar.gz
 
-#Instala o bundle
-feedback "Instalando o bundle"
-sudo gem install bundler
+	#Instala o bundle
+	feedback "Instalando o bundle"
+	sudo gem install bundler
 
-#Instala o SASS
-feedback "Instalando o sass"
-sudo gem install sass
+	#Instala o SASS
+	feedback "Instalando o sass"
+	sudo gem install sass
+fi
 
 feedback "Todas as instalações foram realizadas!"
 
