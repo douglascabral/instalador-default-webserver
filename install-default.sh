@@ -194,7 +194,7 @@ else
 	sudo make install
 	echo "gem: --no-ri --no-rdoc" >> ~/.gemrc
 	cd ..
-	rm -R ruby-stable ruby-stable.tar.gz
+	rm -R --force ruby-stable ruby-stable.tar.gz
 
 	#Instala o bundle
 	feedback "Instalando o bundle"
