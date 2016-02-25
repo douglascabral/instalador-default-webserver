@@ -12,18 +12,31 @@ sudo -v
 #see https://gist.github.com/cowboy/3118588
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
-#Repositório nodejs
+#Repositório nodejs mais recente
 curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -
 
 # Atualiza a lista de pacotes
 sudo apt-get update
 
-# Array de pacotes para instalar
+# Array de pacotes para instalar (Na ordem de importancia)
 programas=(
+build-essential
+zlib1g-dev
+libssl-dev
+libreadline-dev
+libyaml-dev
+libcurl4-openssl-dev
+python-software-properties
+libsqlite3-dev
+libxml2-dev
+libxslt1-dev
+libffi-dev
+sqlite3
 git
 apache2
 mysql-server
 mysql-client
+libmysql++-dev
 php5
 libapache2-mod-php5
 php5-mysql
@@ -48,7 +61,6 @@ php5-xsl
 php5-json
 nodejs
 npm
-build-essentials
 )
 
 #instala cada uma das aplicações
@@ -138,24 +150,24 @@ sudo npm install grunt-cli -g
 sudo ln -s /usr/bin/nodejs /usr/bin/node
 
 #Instala o ruby
-#wget -O ruby-install-0.6.0.tar.gz https://github.com/postmodern/ruby-install/archive/v0.6.0.tar.gz
-#tar -xzvf ruby-install-0.6.0.tar.gz
-#cd ruby-install-0.6.0/
-#sudo make install
-#sudo ruby-install ruby
-#see https://www.digitalocean.com/community/tutorials/how-to-use-rvm-to-manage-ruby-installations-and-environments-on-a-vps
-#see https://www.digitalocean.com/community/tutorials/how-to-install-ruby-on-rails-on-ubuntu-14-04-using-rvm
-sudo gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
-curl -sSL https://get.rvm.io | bash -s stable
+#see https://www.digitalocean.com/community/tutorials/how-to-install-ruby-on-rails-with-rbenv-on-ubuntu-14-04
+#see http://www.leonardteo.com/2012/11/install-ruby-on-rails-on-ubuntu-server/
+wget -O ruby-stable.tar.gz https://cache.ruby-lang.org/pub/ruby/stable-snapshot.tar.gz
+tar -zxf ruby-stable.tar.gz
+mv ./stable-snapshot ./ruby-stable
+cd ruby-stable
+./configure
+make
+sudo make install
+echo "gem: --no-ri --no-rdoc" >> ~/.gemrc
+cd ..
+rm -R ruby-stable ruby-stable.tar.gz
 
-source ~/.rvm/scripts/rvm
-rvm install ruby --latest
+#Instala o bundle
+sudo gem install bundler
 
 #Instala o SASS
-gem install sass
-
-#Apaga o arquivo atual
-sudo rm "$0"
+sudo gem install sass
 
 #Espera interação do usuário
 echo -n "Pressione qualquer tecla para sair..."
