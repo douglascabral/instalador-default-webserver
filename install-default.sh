@@ -185,6 +185,7 @@ sudo npm install bower -g
 #Instala o ruby
 #see https://www.digitalocean.com/community/tutorials/how-to-install-ruby-on-rails-with-rbenv-on-ubuntu-14-04
 #see http://www.leonardteo.com/2012/11/install-ruby-on-rails-on-ubuntu-server/
+#see https://www.digitalocean.com/community/tutorials/how-to-deploy-a-rails-app-with-passenger-and-apache-on-ubuntu-14-04
 feedback "Verificando se Ruby está instalado"
 ruby -v
 if [ $? -eq 0 ];
@@ -210,6 +211,9 @@ else
 	#Instala o SASS
 	feedback "Instalando o sass"
 	sudo gem install sass
+
+	#Instala o rails sem os docs (Instalação mais rápida)
+	sudo gem install --no-rdoc --no-ri rails
 fi
 
 feedback "Todas as instalações foram realizadas!"
