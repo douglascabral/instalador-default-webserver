@@ -27,6 +27,10 @@ feedback()
 #Repositório nodejs mais recente
 curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -
 
+#Repositório mongodb mais recente
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
+sudo echo "deb http://repo.mongodb.org/apt/ubuntu "$(lsb_release -sc)"/mongodb-org/3.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.0.list
+
 # Atualiza a lista de pacotes
 sudo apt-get update
 
@@ -49,6 +53,7 @@ apache2
 memcached
 mysql-server
 mysql-client
+mongodb-org
 libmysql++-dev
 php5
 libapache2-mod-php5
@@ -65,6 +70,7 @@ php5-mcrypt
 php5-memcached
 php5-mhash
 php5-ming
+php5-mongo
 php5-ps
 php5-pspell
 php5-recode
