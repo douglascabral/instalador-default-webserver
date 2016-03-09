@@ -46,6 +46,7 @@ libffi-dev
 sqlite3
 git
 apache2
+memcached
 mysql-server
 mysql-client
 libmysql++-dev
@@ -58,8 +59,10 @@ php5-idn
 php-pear
 php5-imagick
 php5-imap
+php5-intl
 php5-mcrypt
-php5-memcache
+#php5-memcache
+php5-memcached
 php5-mhash
 php5-ming
 php5-ps
@@ -175,6 +178,10 @@ sudo ln -s /usr/bin/nodejs /usr/bin/node
 feedback "Instalando o grunt-cli globalmente"
 sudo npm install grunt-cli -g
 
+feedback "Instalando o bower globalmente"
+sudo npm install bower -g
+
+
 #Instala o ruby
 #see https://www.digitalocean.com/community/tutorials/how-to-install-ruby-on-rails-with-rbenv-on-ubuntu-14-04
 #see http://www.leonardteo.com/2012/11/install-ruby-on-rails-on-ubuntu-server/
@@ -197,7 +204,7 @@ else
 	rm -R --force ruby-stable ruby-stable.tar.gz
 
 	#Instala o bundle
-	feedback "Instalando o bundle"
+	feedback "Instalando o bundler"
 	sudo gem install bundler
 
 	#Instala o SASS
