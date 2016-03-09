@@ -30,6 +30,14 @@ curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -
 #Repositório mongodb mais recente
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
 sudo echo "deb http://repo.mongodb.org/apt/ubuntu "$(lsb_release -sc)"/mongodb-org/3.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.0.list
+# Comandos para o MongoDB
+# sudo systemctl status mongd #Verifica o status de execução do mongodb
+# sudo service mongod start #Inicializa o mongodb
+# sudo service mongod stop #Finaliza o mongodb
+# sudo service mongod restart #Reinicializa o mongodb
+# sudo apt-get purge mongodb-org* #Remove mongodb
+# sudo rm -r /var/log/mongodb #Remove Data Directories.
+# sudo rm -r /var/lib/mongodb #Remove Data Directories.
 
 # Atualiza a lista de pacotes
 sudo apt-get update
