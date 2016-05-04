@@ -24,6 +24,14 @@ feedback()
 	echo 
 }
 
+curl --version
+if ! [ $? -eq 0 ];
+then
+	feedback "Curl não instalado. Instalando as dependencias necessárias para o script."
+	sudo apt-get update
+	sudo apt-get -y install curl
+fi
+
 #Repositório nodejs mais recente
 curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -
 
@@ -162,18 +170,16 @@ if [ -e /usr/local/bin/composer ];
 then
 	echo "Composer já esta instalado"
 else
-	php -r "readfile('https://getcomposer.org/installer');" > composer-setup.php
-	php -r "if (hash('SHA384', file_get_contents('composer-setup.php')) === 'fd26ce67e3b237fffd5e5544b45b0d92c41a4afe3e3f778e942e43ce6be197b9cdc7c251dcde6e2a52297ea269370680') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); }"
-	php composer-setup.php --filename=composer
-	php -r "unlink('composer-setup.php');"
-
-	sudo mv composer /usr/local/bin/composer
+	curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
 fi
 
 #Cria o alias pra o node
 feedback "Criando alias para nodejs > node"
 sudo ln -s /usr/bin/nodejs /usr/bin/node
 
+#Atualiza o npm
+sudo npm install npm -g
+ 
 #Instala o grunt
 feedback "Instalando o grunt-cli globalmente"
 sudo npm install grunt-cli -g
