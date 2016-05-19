@@ -58,6 +58,7 @@ apache2
 memcached
 mysql-server
 mysql-client
+mysql-utilities
 libmysql++-dev
 php7.0 
 libapache2-mod-php7.0
